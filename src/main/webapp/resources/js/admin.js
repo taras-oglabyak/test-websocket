@@ -10,12 +10,14 @@ $(function() {
             stompClient.subscribe('/queue', function(response) {
                 show(JSON.parse(response.body));
             });
+            setConnected(true);
         });
     }
 
     function disconnect() {
         if (stompClient != null) {
             stompClient.disconnect();
+            setConnected(false);
         }
     }
 
@@ -25,15 +27,11 @@ $(function() {
 
     $('#connect').click(function() {
         connect();
-        $('#connect').prop('disabled', true);
-        $('#disconnect').prop('disabled', false);
         return false;
     });
 
     $('#disconnect').click(function() {
         disconnect();
-        $('#connect').prop('disabled', false);
-        $('#disconnect').prop('disabled', true);
         return false;
     });
 
@@ -41,5 +39,10 @@ $(function() {
         $('#messages').text('');
         return false;
     });
+    
+    function setConnected(connected) {
+        $('#connect').prop('disabled', connected);
+        $('#disconnect').prop('disabled', !connected);
+    }
 
 });
